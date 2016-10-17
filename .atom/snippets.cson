@@ -120,7 +120,7 @@
                 charCodeVals: [
                   { charCode: '${6:BASE}', charVal: '' },
                   { charCode: '${7:VTUSERNUM}', charVal: '${8:20}' },
-                  { charCode: '${9:VTDDISKCAP}', charVal: '${10:100}' },
+                  { charCode: '${9:VTDISKCAP}', charVal: '${10:100}' },
                   { charCode: '${11:VTMEMSIZE}', charVal: '${12:2}' },
                 ],
               },
@@ -139,13 +139,13 @@
           offeringId: ${1:offeringid},
           orderParams: {
             rules: {
-              ${2:VT1NAME}: '${3:tester}',
-              ${4:VT1PASSWORD}: '${5:1234}',
+              ${2:VTNAME}: '${3:tester}',
+              ${4:VTPASSWORD}: '${5:1234}',
             },
             chars: {
-              ${6:VT1USERNUM}: '${7:20}',
-              ${8:VT1STDDISKCAP}: '${9:100}',
-              ${10:VT1MEMSIZE}: '${11:2}',
+              ${6:VTUSERNUM}: '${7:20}',
+              ${8:VTDISKCAP}: '${9:100}',
+              ${10:VTMEMSIZE}: '${11:2}',
             },
             promotions: ['${12:VERTEST3M}', '${13:VERTEST2MNEW}'],
           },
