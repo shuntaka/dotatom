@@ -120,7 +120,7 @@
                 charCodeVals: [
                   { charCode: '${6:BASE}', charVal: '' },
                   { charCode: '${7:VTUSERNUM}', charVal: '${8:20}' },
-                  { charCode: '${9:VTSTDDISKCAP}', charVal: '${10:100}' },
+                  { charCode: '${9:VTDDISKCAP}', charVal: '${10:100}' },
                   { charCode: '${11:VTMEMSIZE}', charVal: '${12:2}' },
                 ],
               },
