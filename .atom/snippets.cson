@@ -1,0 +1,206 @@
+# Your snippets
+#
+# Atom snippets allow you to enter a simple prefix in the editor and hit tab to
+# expand the prefix into a larger code block with templated values.
+#
+# You can create a new snippet in this file by typing "snip" and then hitting
+# tab.
+#
+# An example CoffeeScript snippet to expand log to console.log:
+#
+# '.source.coffee':
+#   'Console log':
+#     'prefix': 'log'
+#     'body': 'console.log $1'
+#
+# Each scope (e.g. '.source.coffee' above) can only be declared once.
+#
+# This file uses CoffeeScript Object Notation (CSON).
+# If you are unfamiliar with CSON, you can read more about it in the
+# Atom Flight Manual:
+# https://atom.io/docs/latest/using-atom-basic-customization#cson
+'.source.js':
+  'describeCase':
+    'prefix': 'describeCase'
+    'body': """
+    import genReadResult from 'utils/genReadResult.js';
+    import genWriteResult from 'utils/genWriteResult.js';
+
+    import jsonfile from 'jsonfile';
+    import fs from 'fs';
+    import beautify from 'json-beautify';
+
+    let results;
+    let writeResult;
+    const readResult = genReadResult(results);
+
+    describe('${1:3 times upgrade within 1month on plan change}', () => {
+      beforeEach((client, done) => {
+        try {
+          results = jsonfile.readFileSync(`${__dirname}/results.json`);
+        } catch (err) {
+          fs.writeFileSync(`${__dirname}/results.json`, '{}');
+          results = jsonfile.readFileSync(`${__dirname}/results.json`);
+        }
+        done();
+      });
+
+      afterEach((client, done) => {
+        const resultsBeautified = beautify(results, null, 2, 80);
+        fs.writeFileSync(`${__dirname}/results.json`, resultsBeautified);
+        done();
+      });
+      after((client, done) => {
+        client
+          .end();
+        done();
+      });
+
+    }); // <= end of describe('$1'...
+    """
+
+  'describeFirst&Recurring':
+    'prefix': 'describeFirst&Recurring'
+    'body': """
+      describe('before ${1:3rd} Recurring Batch cycle', () => {
+
+      }); // <= end of describe('before ${1:3rd} Recurring Batch cycle'
+    """
+
+  'describeBDC':
+    'prefix': 'describeBDC'
+    'body': """
+      describe('before ${1:1st} BDC', () => {
+
+      }); // <= end of describe('before ${1:1st} BDC'
+    """
+
+  'it_Nightwatch':
+    'prefix': 'it'
+    'body': """
+      it('step${1:1}: ${2:build an offering ver1}', (client) => {
+        writeResult = genWriteResult(results, '${3:buildOffering}_${4:1}');
+
+      }); // <= end of it('step${1:1}: ${2:build an offering ver1}'
+    """
+
+  'readResult':
+    'prefix': 'readResult'
+    'body': """
+      const resultObj${1:1} = readResult({
+        testNum: '${2:buildOffering_1}',
+        opeName: '${3:buildOffering}',
+        index: '${4:0}',
+        properties: ['${5:offeringid}', '${6:orderid}'],
+      });
+      const ${5:offeringid} = resultObj${1:1}.${5:offeringid};
+      const ${6:orderid} = resultObj${1:1}.${6:orderid};
+
+    """
+
+  'buildOffering':
+    'prefix': 'buildoffering'
+    'body': """
+      client
+        .buildOffering(
+        {
+          specSheetFolder: `${__dirname}/specsheets`,
+          specSheetFileName: '${1:CD2_C001_ver1}.xls',
+          offeringCode: '${2:cd2c001}',
+          flags: [
+            ${3:'allownochange', 'allowvoluntarychange', 'autochangeonexpiration',
+            'prorated', 'versionuponeed', 'versionuponplanchange',}
+          ],
+          promotions: {
+            BillPercentageOFF: {
+              ${4:VERTEST3M}: {},
+            },
+            OfferingFeesWaivers: {
+              ${5:VERTEST2M}: {
+                charCodeVals: [
+                  { charCode: '${6:BASE}', charVal: '' },
+                  { charCode: '${7:VT1USERNUM}', charVal: '${8:20}' },
+                  { charCode: '${9:VT1STDDISKCAP}', charVal: '${10:100}' },
+                  { charCode: '${11:VT1MEMSIZE}', charVal: '${12:2}' },
+                ],
+              },
+            },
+          },
+        },
+        writeResult
+      );
+    """
+
+  'buyAccountProduct':
+    'prefix': 'buyaccountproduct'
+    'body': """
+      client
+        .buyAccountProduct({
+          offeringId: ${1:offeringid},
+          orderParams: {
+            rules: {
+              ${2:VT1NAME}: '${3:tester}',
+              ${4:VT1PASSWORD}: '${5:1234}',
+            },
+            chars: {
+              ${6:VT1USERNUM}: '${7:20}',
+              ${8:VT1STDDISKCAP}: '${9:100}',
+              ${10:VT1MEMSIZE}: '${11:2}',
+            },
+            promotions: ['${12:VERTEST3M}', '${13:VERTEST2MNEW}'],
+          },
+          activationDate: '${14:2014/04/01} ${15:15:00:00}',
+          begEffDate: '${16:2014/04/01} ${17:15:00:00}',
+        },
+        writeResult
+      );
+    """
+
+  'planChangeAccountProduct':
+    'prefix': 'planchangeaccountproduct'
+    'body': """
+        client
+          .planChangeAccountProduct(
+          {
+            offeringId: ${1:offeringid},
+            accountProductId: ${2:accountproductid},
+            orderParams: {
+              rules: {
+                ${3:VT1NAME}: '${4:tester}',
+                ${5:VT1PASSWORD}: '${6:1234}',
+              },
+              chars: {
+                ${7:VT1USERNUM}: '${8:20}',
+                ${9:VT1STDDISKCAP}: '${10:100}',
+                ${11:VT1MEMSIZE}: '${12:2}',
+              },
+              promotions: ['${13:VERTEST3M}', '${14:VERTEST2MNEW}'],
+            },
+            changePlanLastUpdatedDate: '${15:2014/04/01} ${16:15:00:00}',
+            lastUpdatedDate: '${17:2014/04/01} ${18:15:00:00}',
+          },
+            writeResult
+          );
+    """
+  'renewAccountProduct':
+    'prefix': 'renewaccountproduct'
+    'body': """
+        client
+          .renewAccountProduct(
+            {
+              accountProductId: ${1:accountproductid},
+              renewOrderChangePlanLastUpdatedDate: '${2:2014/07/07} ${3:15:00:00}',
+              renewOrderLastUpdatedDate: '${4:2014/07/07} ${5:15:00:00}',
+            },
+            writeResult
+          );
+    """
+
+  'runBDC':
+    'prefix': 'runbdc'
+    'body': """
+      it('running ${1:1st} BDC', (client) => {
+        client
+          .runBDC();
+      }) // <= end of it('running ${1:1st} BDC'
+    """

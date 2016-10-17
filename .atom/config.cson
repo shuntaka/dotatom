@@ -1,0 +1,29 @@
+"*":
+  core:
+    disabledPackages: [
+      "eslint-fixer"
+      "emacs-word-movement"
+    ]
+    themes: [
+      "atom-light-ui"
+      "zenburn"
+    ]
+  editor:
+    fontSize: 20
+  "exception-reporting":
+    userId: "cd913883-52d8-b85c-7652-75f48765ebd9"
+  linter: {}
+  "linter-eslint":
+    disableFSCache: true
+  "markdown-preview":
+    breakOnSingleNewline: true
+  minimap:
+    plugins:
+      cursorline: true
+      cursorlineDecorationsZIndex: 0
+      "find-and-replace": true
+      "find-and-replaceDecorationsZIndex": 0
+      pigments: true
+      pigmentsDecorationsZIndex: 0
+  welcome:
+    showOnStartup: false
