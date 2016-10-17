@@ -56,23 +56,23 @@
         done();
       });
 
-    }); // <= end of describe('$1'...
+    }); // <= end of describe('${1:3 times upgrade within 1month on plan change}'...
     """
 
   'describeFirst&Recurring':
     'prefix': 'describeFirst&Recurring'
     'body': """
-      describe('before ${1:3rd} Recurring Batch cycle', () => {
+      describe('FRB_${1:3}', () => {
 
-      }); // <= end of describe('before ${1:3rd} Recurring Batch cycle'
+      }); // <= end of describe('FRB_${1:3}...'
     """
 
   'describeBDC':
     'prefix': 'describeBDC'
     'body': """
-      describe('before ${1:1st} BDC', () => {
+      describe('FRB_${1:3}_BDC_${2:3}', () => {
 
-      }); // <= end of describe('before ${1:1st} BDC'
+      }); // <= end of describe('FRB_${1:3}_BDC_${2:3}...'
     """
 
   'it_Nightwatch':
