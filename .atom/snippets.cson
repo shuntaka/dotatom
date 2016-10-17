@@ -60,7 +60,7 @@
     """
 
   'describeFirst&Recurring':
-    'prefix': 'describeFirst&Recurring'
+    'prefix': 'describeFRB'
     'body': """
       describe('FRB_${1:3}', () => {
 
