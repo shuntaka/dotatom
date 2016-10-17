@@ -119,9 +119,9 @@
               ${5:VERTEST2M}: {
                 charCodeVals: [
                   { charCode: '${6:BASE}', charVal: '' },
-                  { charCode: '${7:VT1USERNUM}', charVal: '${8:20}' },
-                  { charCode: '${9:VT1STDDISKCAP}', charVal: '${10:100}' },
-                  { charCode: '${11:VT1MEMSIZE}', charVal: '${12:2}' },
+                  { charCode: '${7:VTUSERNUM}', charVal: '${8:20}' },
+                  { charCode: '${9:VTSTDDISKCAP}', charVal: '${10:100}' },
+                  { charCode: '${11:VTMEMSIZE}', charVal: '${12:2}' },
                 ],
               },
             },
