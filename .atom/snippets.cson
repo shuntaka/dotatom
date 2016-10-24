@@ -32,15 +32,17 @@
 
     let results;
     let writeResult;
-    const readResult = genReadResult(results);
+    let readResult;
 
     describe('${1:3 times upgrade within 1month on plan change}', () => {
       beforeEach((client, done) => {
         try {
           results = jsonfile.readFileSync(`${__dirname}/results.json`);
+          readResult = genReadResult(results);
         } catch (err) {
           fs.writeFileSync(`${__dirname}/results.json`, '{}');
           results = jsonfile.readFileSync(`${__dirname}/results.json`);
+          readResult = genReadResult(results);
         }
         done();
       });
@@ -60,28 +62,28 @@
     """
 
   'describeFirst&Recurring':
-    'prefix': 'describeFRB'
+    'prefix': 'describeFirst&Recurring'
     'body': """
-      describe('FRB_${1:3}', () => {
-
-      }); // <= end of describe('FRB_${1:3}...'
+      describe('FRB_${1:1}', () => {
+        ${2}
+      }); // <= end of describe('FRB_${1:1}'
     """
 
   'describeBDC':
     'prefix': 'describeBDC'
     'body': """
-      describe('FRB_${1:3}_BDC_${2:3}', () => {
-
-      }); // <= end of describe('FRB_${1:3}_BDC_${2:3}...'
+      describe('FRB_${1:1}_BDC_${2:1}', () => {
+        ${2}
+      }); // <= end of describe('FRB_${1:1}_BDC_${2:1}'
     """
 
   'it_Nightwatch':
     'prefix': 'it'
     'body': """
-      it('step${1:1}: ${2:build an offering ver1}', (client) => {
-        writeResult = genWriteResult(results, '${3:buildOffering}_${4:1}');
-
-      }); // <= end of it('step${1:1}: ${2:build an offering ver1}'
+      it('FRB_${1:1}_BDC_${2:1}_step${3:1}: ${4:build an offering ver1}', (client) => {
+        writeResult = genWriteResult(results, '${5:buildOffering}_${6:1}');
+        ${7}
+      }); // <= end of it('FRB_${1:1}_BDC_${2:1}_step${3:1}: ${4:build an offering ver1}'
     """
 
   'readResult':
@@ -95,7 +97,7 @@
       });
       const ${5:offeringid} = resultObj${1:1}.${5:offeringid};
       const ${6:orderid} = resultObj${1:1}.${6:orderid};
-
+      ${7}
     """
 
   'buildOffering':
@@ -106,22 +108,26 @@
         {
           specSheetFolder: `${__dirname}/specsheets`,
           specSheetFileName: '${1:CD2_C001_ver1}.xls',
-          offeringCode: '${2:cd2c001}',
-          flags: [
-            ${3:'allownochange', 'allowvoluntarychange', 'autochangeonexpiration',
-            'prorated', 'versionuponeed', 'versionuponplanchange',}
-          ],
+            flags: {
+              allownochange: '${2:true}',
+              allowvoluntarychange: '${3:true}',
+              autochangeonexpiration: '${4:true}',
+              prorated: '${5:true}',
+              versionuponeed: '${6:true}',
+              versionuponplanchange: '${7:true}',
+            },
+
           promotions: {
             BillPercentageOFF: {
-              ${4:VERTEST3M}: {},
+              ${8:VERTEST3M}: {},
             },
             OfferingFeesWaivers: {
-              ${5:VERTEST2M}: {
+              ${9:VERTEST2M}: {
                 charCodeVals: [
-                  { charCode: '${6:BASE}', charVal: '' },
-                  { charCode: '${7:VTUSERNUM}', charVal: '${8:20}' },
-                  { charCode: '${9:VTDISKCAP}', charVal: '${10:100}' },
-                  { charCode: '${11:VTMEMSIZE}', charVal: '${12:2}' },
+                  { charCode: '${10:BASE}', charVal: '' },
+                  { charCode: '${11:VT1USERNUM}', charVal: '${12:20}' },
+                  { charCode: '${13:VT1STDDISKCAP}', charVal: '${14:100}' },
+                  { charCode: '${15:VT1MEMSIZE}', charVal: '${16:2}' },
                 ],
               },
             },
@@ -139,13 +145,13 @@
           offeringId: ${1:offeringid},
           orderParams: {
             rules: {
-              ${2:VTNAME}: '${3:tester}',
-              ${4:VTPASSWORD}: '${5:1234}',
+              ${2:VT1NAME}: '${3:tester}',
+              ${4:VT1PASSWORD}: '${5:1234}',
             },
             chars: {
-              ${6:VTUSERNUM}: '${7:20}',
-              ${8:VTDISKCAP}: '${9:100}',
-              ${10:VTMEMSIZE}: '${11:2}',
+              ${6:VT1USERNUM}: '${7:20}',
+              ${8:VT1STDDISKCAP}: '${9:100}',
+              ${10:VT1MEMSIZE}: '${11:2}',
             },
             promotions: ['${12:VERTEST3M}', '${13:VERTEST2MNEW}'],
           },
@@ -181,6 +187,7 @@
           },
             writeResult
           );
+          ${19}
     """
   'renewAccountProduct':
     'prefix': 'renewaccountproduct'
@@ -189,11 +196,13 @@
           .renewAccountProduct(
             {
               accountProductId: ${1:accountproductid},
-              renewOrderChangePlanLastUpdatedDate: '${2:2014/07/07} ${3:15:00:00}',
-              renewOrderLastUpdatedDate: '${4:2014/07/07} ${5:15:00:00}',
+              orderId: ${2:orderid}
+              renewOrderChangePlanLastUpdatedDate: '${3:2014/07/07} ${4:15:00:00}',
+              renewOrderLastUpdatedDate: '${5:2014/07/07} ${6:15:00:00}',
             },
             writeResult
           );
+        ${6}
     """
 
   'runBDC':
@@ -201,6 +210,6 @@
     'body': """
       it('running ${1:1st} BDC', (client) => {
         client
-          .runBDC();
+          .runBatch('BDC');
       }) // <= end of it('running ${1:1st} BDC'
     """
