@@ -235,12 +235,15 @@
     'prefix': 'forcepush'
     'body': """
         client
-          .forcePush({
-            accountProductId: accountproductid,
-            orderId: orderid,
-            renewOrderChangePlanLastUpdatedDate: '${1:2015/07/07 15:00:00}',
-            renewOrderLastUpdatedDate: '${2:2015/07/07 15:00:00}',
-          },writeResult);
+          .forcePush(
+            {
+              accountProductId: accountproductid,
+              orderId: orderid,
+              renewOrderChangePlanLastUpdatedDate: '${1:2015/07/07 15:00:00}',
+              renewOrderLastUpdatedDate: '${2:2015/07/07 15:00:00}',
+            },
+            writeResult
+          );
         ${3}
     """
   'runBDC':
