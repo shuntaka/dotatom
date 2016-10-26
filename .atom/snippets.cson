@@ -57,7 +57,7 @@
           .end();
         done();
       });
-
+      ${2}
     }); // <= end of describe('${1:3 times upgrade within 1month on plan change}'...
     """
 
@@ -73,7 +73,7 @@
     'prefix': 'describeBDC'
     'body': """
       describe('FRB_${1:1}_BDC_${2:1}', () => {
-        ${2}
+        ${3}
       }); // <= end of describe('FRB_${1:1}_BDC_${2:1}'
     """
 
@@ -135,6 +135,7 @@
         },
         writeResult
       );
+      ${17}
     """
 
   'buyAccountProduct':
@@ -160,6 +161,32 @@
         },
         writeResult
       );
+      ${18}
+    """
+
+  'provisionAPFuture':
+    'prefix': 'provisionapfuture'
+    'body': """
+      client
+        .provisionAPFuture({
+          offeringId: ${1:offeringid},
+          orderParams: {
+            rules: {
+              ${2:VT1NAME}: '${3:tester}',
+              ${4:VT1PASSWORD}: '${5:1234}',
+            },
+            chars: {
+              ${6:VT1USERNUM}: '${7:20}',
+              ${8:VT1STDDISKCAP}: '${9:100}',
+              ${10:VT1MEMSIZE}: '${11:2}',
+            },
+            promotions: ['${12:VERTEST3M}', '${13:VERTEST2MNEW}'],
+          },
+          startOnDate: '${14:2015/04/02} ${15:01:00:00}',
+        },
+        writeResult
+      );
+      ${16}
     """
 
   'planChangeAccountProduct':
@@ -208,8 +235,13 @@
     'prefix': 'forcepush'
     'body': """
         client
-          .forcePush(() => ({ accountProductId: ${1:accountproductid} }))
-          ${2}
+          .forcePush({
+            accountProductId: accountproductid,
+            orderId: orderid,
+            renewOrderChangePlanLastUpdatedDate: '${1:2015/07/07 15:00:00}',
+            renewOrderLastUpdatedDate: '${2:2015/07/07 15:00:00}',
+          },writeResult);
+        ${3}
     """
   'runBDC':
     'prefix': 'runbdc'
