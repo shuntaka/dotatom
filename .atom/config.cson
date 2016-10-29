@@ -12,7 +12,8 @@
     fontSize: 20
   "exception-reporting":
     userId: "cd913883-52d8-b85c-7652-75f48765ebd9"
-  linter: {}
+  linter:
+    errorPanelHeight: 63
   "linter-eslint":
     disableFSCache: true
   "markdown-preview":

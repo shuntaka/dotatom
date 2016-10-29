@@ -23,6 +23,7 @@
   'describeCase':
     'prefix': 'describeCase'
     'body': """
+    import showExeLog from 'utils/showExeLog.js';
     import genReadResult from 'utils/genReadResult.js';
     import genWriteResult from 'utils/genWriteResult.js';
 
@@ -58,7 +59,14 @@
         done();
       });
       ${2}
-    }); // <= end of describe('${1:3 times upgrade within 1month on plan change}'...
+    }); // <= end of describe('${1}'...
+    """
+  'describe':
+    'prefix': 'describe'
+    'body': """
+      describe('${1:build an offering}', () => {
+        ${2}
+      }); // <= end of describe('${1}'
     """
 
   'describeFirst&Recurring':
@@ -66,7 +74,7 @@
     'body': """
       describe('FRB_${1:1}', () => {
         ${2}
-      }); // <= end of describe('FRB_${1:1}'
+      }); // <= end of describe('FRB_${1}'
     """
 
   'describeBDC':
@@ -74,30 +82,41 @@
     'body': """
       describe('FRB_${1:1}_BDC_${2:1}', () => {
         ${3}
-      }); // <= end of describe('FRB_${1:1}_BDC_${2:1}'
+      }); // <= end of describe('FRB_${1}_BDC_${2}'
     """
 
-  'it_Nightwatch':
+  'it':
     'prefix': 'it'
     'body': """
-      it('FRB_${1:1}_BDC_${2:1}_step${3:1}: ${4:build an offering ver1}', (client) => {
-        writeResult = genWriteResult(results, '${5:buildOffering}_${6:1}');
+      it('step${3:1}: ${4:build an offering ver1}', (client) => {
+        showExeLog('#### step${3}: ${4} ####')
+        writeResult = genWriteResult(results, '${5:buildOfferingVer1}');
         ${7}
-      }); // <= end of it('FRB_${1:1}_BDC_${2:1}_step${3:1}: ${4:build an offering ver1}'
+      }); // <= end of it('step${3}: ${4}'
+    """
+
+  'it_FRB_BDC':
+    'prefix': 'it_FRB_BDC'
+    'body': """
+      it('FRB_${1:1}_BDC_${2:1}_step${3:1}: ${4:build an offering ver1}', (client) => {
+        writeResult = genWriteResult(results, '${5:buildOfferingVer1}');
+        ${7}
+      }); // <= end of it('FRB_${1}_BDC_${2}_step${3}: ${4}'
     """
 
   'readResult':
     'prefix': 'readResult'
     'body': """
       const resultObj${1:1} = readResult({
-        testNum: '${2:buildOffering_1}',
+        testNum: '${2:buildOfferingVer1}',
         opeName: '${3:buildOffering}',
         index: '${4:0}',
-        properties: ['${5:offeringid}', '${6:orderid}'],
+        properties: ['${5:offeringid}', '${6:orderid}', '${7:accountproductid}'],
       });
       const ${5:offeringid} = resultObj${1:1}.${5:offeringid};
       const ${6:orderid} = resultObj${1:1}.${6:orderid};
-      ${7}
+      const ${7:accountproductid} = resultObj${1:1}.${7:accountproductid};
+      ${8}
     """
 
   'buildOffering':
@@ -108,20 +127,19 @@
         {
           specSheetFolder: `${__dirname}/specsheets`,
           specSheetFileName: '${1:CD2_C001_ver1}.xls',
-            flags: {
-              allownochange: '${2:true}',
-              allowvoluntarychange: '${3:true}',
-              autochangeonexpiration: '${4:true}',
-              prorated: '${5:true}',
-              versionuponeed: '${6:true}',
-              versionuponplanchange: '${7:true}',
-            },
-
+          flags: {
+            allownochange: '${2:true}',
+            allowvoluntarychange: '${3:true}',
+            autochangeonexpiration: '${4:true}',
+            prorated: '${5:true}',
+            versionuponeed: '${6:true}',
+            versionuponplanchange: '${7:true}',
+          },
           promotions: {
-            BillPercentageOFF: {
+            BillPercentageOFF: { // when applying no promotion, make BillPercentageOFF an empty object
               ${8:VERTEST3M}: {},
             },
-            OfferingFeesWaivers: {
+            OfferingFeesWaivers: { // when applying no promotion, make OfferingFeesWaivers an empty object
               ${9:VERTEST2M}: {
                 charCodeVals: [
                   { charCode: '${10:BASE}', charVal: '' },
@@ -134,7 +152,7 @@
           },
         },
         writeResult
-      );
+        );
       ${17}
     """
 
@@ -142,7 +160,8 @@
     'prefix': 'buyaccountproduct'
     'body': """
       client
-        .buyAccountProduct({
+        .buyAccountProduct(
+        {
           offeringId: ${1:offeringid},
           orderParams: {
             rules: {
@@ -154,13 +173,13 @@
               ${8:VT1STDDISKCAP}: '${9:100}',
               ${10:VT1MEMSIZE}: '${11:2}',
             },
-            promotions: ['${12:VERTEST3M}', '${13:VERTEST2MNEW}'],
+            promotions: ['${12:VERTEST3M}', '${13:VERTEST2MNEW}'], // for no promotions, make this an empty array
           },
           activationDate: '${14:2015/04/05} ${15:15:00:00}',
           begEffDate: '${16:2015/04/05} ${17:15:00:00}',
         },
         writeResult
-      );
+        );
       ${18}
     """
 
@@ -168,25 +187,28 @@
     'prefix': 'provisionapfuture'
     'body': """
       client
-        .provisionAPFuture({
+        .provisionAPFuture(
+        {
           offeringId: ${1:offeringid},
           orderParams: {
+            orderType: '${2:new}',
+            accountProductId: ${3:accountproductid},
             rules: {
-              ${2:VT1NAME}: '${3:tester}',
-              ${4:VT1PASSWORD}: '${5:1234}',
+              ${4:VT1NAME}: '${5:tester}',
+              ${6:VT1PASSWORD}: '${7:1234}',
             },
             chars: {
-              ${6:VT1USERNUM}: '${7:20}',
-              ${8:VT1STDDISKCAP}: '${9:100}',
-              ${10:VT1MEMSIZE}: '${11:2}',
+              ${8:VT1USERNUM}: '${9:20}',
+              ${10:VT1STDDISKCAP}: '${11:100}',
+              ${12:VT1MEMSIZE}: '${13:2}',
             },
-            promotions: ['${12:VERTEST3M}', '${13:VERTEST2MNEW}'],
+            promotions: ['${14:VERTEST3M}', '${15:VERTEST2MNEW}'],
           },
-          startOnDate: '${14:2015/04/02} ${15:01:00:00}',
+          startOnDate: '${16:2015/04/02} ${17:01:00:00}',
         },
-        writeResult
-      );
-      ${16}
+       writeResult
+       );
+      ${18}
     """
 
   'planChangeAccountProduct':
@@ -212,39 +234,40 @@
             changePlanLastUpdatedDate: '${15:2015/04/05} ${16:15:00:00}',
             lastUpdatedDate: '${17:2015/04/05} ${18:15:00:00}',
           },
-            writeResult
+          writeResult
           );
-          ${19}
+        ${19}
     """
   'renewAccountProduct':
     'prefix': 'renewaccountproduct'
     'body': """
         client
           .renewAccountProduct(
-            {
-              accountProductId: ${1:accountproductid},
-              orderId: ${2:orderid}
-              renewOrderChangePlanLastUpdatedDate: '${3:2015/07/07} ${4:15:00:00}',
-              renewOrderLastUpdatedDate: '${5:2015/07/07} ${6:15:00:00}',
-            },
-            writeResult
-          );
-        ${6}
+          {
+            accountProductId: ${1:accountproductid},
+            orderId: ${2:orderid}
+            renewOrderChangePlanLastUpdatedDate: '${3:2015/07/07} ${4:15:00:00}',
+            renewOrderLastUpdatedDate: '${5:2015/07/07} ${6:15:00:00}',
+          },
+          writeResult
+        );
+      ${6}
     """
   'forcePush':
     'prefix': 'forcepush'
     'body': """
         client
           .forcePush(
-            {
-              accountProductId: accountproductid,
-              orderId: orderid,
-              renewOrderChangePlanLastUpdatedDate: '${1:2015/07/07 15:00:00}',
-              renewOrderLastUpdatedDate: '${2:2015/07/07 15:00:00}',
-            },
-            writeResult
+          {
+            accountProductId: accountproductid,
+            orderId: orderid,
+            isByHand: ${1:true} // optional parameter, use it for APR provisioned long back
+            renewOrderChangePlanLastUpdatedDate: '${2:2015/07/07 15:00:00}',
+            renewOrderLastUpdatedDate: '${3:2015/07/07 15:00:00}',
+          },
+          writeResult
           );
-        ${3}
+        ${4}
     """
   'runBDC':
     'prefix': 'runbdc'
@@ -252,5 +275,5 @@
       it('running ${1:1st} BDC', (client) => {
         client
           .runBatch('BDC');
-      }) // <= end of it('running ${1:1st} BDC'
+      }) // <= end of it('running ${1} BDC'
     """
