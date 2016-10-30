@@ -261,7 +261,7 @@
           {
             accountProductId: accountproductid,
             orderId: orderid,
-            isByHand: ${1:true} // optional parameter, use it for APR provisioned long back
+            isByHand: ${1:true}, // optional parameter, use it for APR provisioned long back
             renewOrderChangePlanLastUpdatedDate: '${2:2015/07/07 15:00:00}',
             renewOrderLastUpdatedDate: '${3:2015/07/07 15:00:00}',
           },
