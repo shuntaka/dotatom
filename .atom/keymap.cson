@@ -51,8 +51,6 @@
   'ctrl-x ctrl-f': 'advanced-open-file:toggle'
 
 'atom-text-editor':
-  'cmd-f': 'editor:move-to-end-of-word'
-  'cmd-b': 'editor:move-to-beginning-of-word'
   'ctrl-a': 'editor:move-to-beginning-of-line'
   'cmd-space': 'bookmarks:toggle-bookmark' # for mac
   'cmd-[': 'bookmarks:jump-to-previous-bookmark' # for mac
@@ -69,6 +67,7 @@
 # specificity (0, 0, 2)
 # ==============================
 'atom-workspace atom-text-editor':
+  'ctrl-y': 'core:paste'
   'ctrl-t': 'window:focus-next-pane'
   'ctrl-m': 'editor:newline'
   'ctrl-/': 'core:undo'
@@ -79,7 +78,10 @@
   'ctrl-cmd-o': 'easy-motion-redux:letter-select' # for mac
   'ctrl-alt-o': 'easy-motion-redux:letter-select' # for win
   'ctrl-x ctrl-x': 'command-palette:toggle'
-  'alt-m': 'project-find:show'
+
+  'cmd-w': 'atomic-emacs:copy-region-as-kill'
+  'cmd-b': 'atomic-emacs:backward-word'
+  'cmd-f': 'atomic-emacs:forward-word'
 
 # ==============================
 # specificity (0, 1, 0)
@@ -105,9 +107,9 @@
   'ctrl-m': 'core:confirm'
 
 'atom-text-editor:not([mini])':
+  'cmd-y': 'clipboard-plus:toggle'
   'alt-y': 'clipboard-plus:toggle'
   'ctrl-j': 'snippets:available'
-
 
 # mac
 '.platform-darwin atom-workspace':
@@ -142,10 +144,6 @@
 'atom-workspace atom-text-editor.autocomplete-active':
   'tab': 'snippets:next-tab-stop'
   'shift-tab': 'snippets:previous-tab-stop'
-
-# for mac
-'.platform-darwin atom-workspace atom-text-editor':
-  'cmd-w': 'atomic-emacs:copy-region-as-kill'
 
 # ==============================
 # specificity (0, 2, 1)
